@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    stages{
+        stage(git){
+            steps{
+                git branch: 'main', url: 'https://github.com/LIKITH-coder/gctech.git'
+            }
+        }
+        stage(build){
+            steps{
+                sh 'mvn clean package'
+            }
+        }
+        stage(dockerfile){
+            steps{
+                sh 'docker build -t likithbabu/ramesh  /var/lib/jenkins/workspace/satya/'
+            }
+        }
+        stage(cont){
+            steps{
+                sh 'docker run --rm -d -p 8085:8080 --name likith2 likithbabu/ramesh'
+            }
+        }
+        stage(login){
+            steps{
+                sh 'docker login -u "likithbabu" -p "likith@1209"'
+            }
+        }
+        stage(hub){
+            steps{
+                DockerRegistry(credentialsId: 'babu', url: 'https://hub.docker.com/')
+            }
+        }
+    }
+}

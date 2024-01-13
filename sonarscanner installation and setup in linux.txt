@@ -1,0 +1,88 @@
+sonarscanner installation and setup in linux-server
+
+this site is for sonarscanner installtion and setup
+
+https://blog.doyenhub.com/how-to-setup-and-run-sonarscanner-on-linux-local-system/
+ 
+this site is for sonar-scanner zip file
+
+https://docs.sonarsource.com/sonarqube/9.9/analyzing-source-code/scanners/sonarscanner/#:~:text=Expand%20the%20downloaded%20file%20into,INSTALL_DIRECTORY%3E%20in%20the%20next%20steps.&text=Add%20the%20%2Fbin%20directory%20to%20your%20path.&text=If%20you%20need%20more%20debug,%2DDsonar.verbose%3Dtrue%20.
+
+
+select linux bit and right click and copy link address click
+
+
+Sonar Scanner Setup:
+1) Installation
+
+IN SERVER >>>>
+   cd /opt/
+   wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip?_gl=1*1njbyph*_gcl_au*MTE4MDYzNDE4LjE3MDQxODU4MTA.*_ga*MjEyMjc5NDA2Ni4xNzA0MTg1ODEw*_ga_9JZ0GZ5TC6*MTcwNDk1NTY2NC42LjEuMTcwNDk2NzY0Mi4xMS4wLjA.
+   unzip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip?_gl=1*1njbyph*_gcl_au*MTE4MDYzNDE4LjE3MDQxODU4MTA.
+   mv sonar-scanner-4.6.2.2472-linux sonar-scanner
+
+
+Edit sonar scanner properties and add below line of code.
+   vi /opt/sonar-scanner/conf/sonar-scanner.properties
+
+
+host will be URL of your SonarQube server
+   sonar.host.url=http://localhost:9000
+   sonar.sourceEncoding=UTF-8
+ADD SONARQUBE PUBLIC_IP in LOCALHOST
+
+We need to add the sonar-scanner command to the PATH variable. Let’s create a file to automate the required environment variables configuration
+   vi /etc/profile.d/sonar-scanner.sh
+
+Add below line of code in the file:
+   #!/bin/bash
+   export PATH="$PATH:/opt/sonar-scanner/bin"  
+
+Reboot your computer or use the source command to add the sonar scanner command to the PATH variable.
+   reboot
+    (or)
+   source /etc/profile.d/sonar-scanner.sh
+
+Check the variable set for the scanner with below command:
+   env | grep PATH
+
+It will output below list of details:
+        PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/sonar-scanner/bin
+
+
+   sonar-scanner -v
+
+NOW SONAR-SCANNER VERSION is SHOWS
+
+
+After installation is completed install git maven 
+git clone >>>>repo>>>>
+
+NOW USING SONAR-SCANNER WE SCAN OR TEST SOURCE CODE
+
+
+
+2) Project Setup and run scanner
+   
+   Using Command prompt:
+Traverse to your project directory for which you want to run scan. In root of the directory run the below command and replace the detail which you have setup and got from the SonarQube project setup. Here replace the projectKey and sonar.login value with your detail
+
+>>>> cd /root/live01/src/main/webapp/ <<<<
+ 
+ 
+NOW RUN THIS BELOW COMMAND 
+
+   sonar-scanner
+   -Dsonar.projectKey=myproject
+   -Dsonar.sources=.
+   -Dsonar.host.url=http://localhost:9000
+   -Dsonar.login=b917488b0e13bb34f0ea66d5dd751cd8888d1e4b
+project_key mention your maven projectkey name and sources mean our source code and host_url is our sonarqube serverurl and login is sonarqube authentication_token
+
+Once you will run this command, it will automatically create the properties file in the root of the project. So next time you can directly run below command and also update detail in that file.
+    sonar-scanner 
+
+
+
+this is installation and setup of sonascanner then test reports is submitted to sonarqube
+
